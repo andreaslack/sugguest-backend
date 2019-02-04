@@ -48,12 +48,14 @@ const UserSchema = new Schema({
     }
 });
 
-// Mejoramos lo que devolvemos de mongoDB (no necesitamos la contraseña)
+
+
+// Mejoramos lo que devolvemos de mongoDB (no necesitamos la contraseña) Más seguridad
 UserSchema.methods.toJSON = function () {
     var user = this;
     var userObject = user.toObject();
 
-    return _.pick(userObject, ['_id', 'email']); //no devolvemos la contraseña, por ejemplo.
+    return _.pick(userObject, ['_id', 'email']); //no devolvemos la contraseña ni el token, son datos sensibles.
 }
 
 
