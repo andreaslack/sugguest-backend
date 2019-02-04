@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 var _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const { authenticate } = require('./config/authenticate');
+const bcrypt = require('bcryptjs');
 
 const app = express();
 
@@ -43,7 +44,7 @@ app.get('/prueba', (req, res) => {
 // Ruta registro para usuarios
 app.post('/register/user', (req, res) => {
 
-    var body = _.pick(req.body, ['name','email', 'password']);
+    var body = _.pick(req.body, ['name','email', 'password','accept_terms']);
     var user = new User(body);
 
 
@@ -119,9 +120,6 @@ app.get('/companies', (req, res) => {
         }
     });
 })
-
-
-
 
 
 
