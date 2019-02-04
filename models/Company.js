@@ -40,6 +40,9 @@ const CompanySchema = new Schema({
         type: Date,
         default: Date.now
     },
+    description: {
+        type: String
+    },
     tokens: [{
         access: {
             type: String,
@@ -74,6 +77,10 @@ const CompanySchema = new Schema({
     duns: {
         type: Number,
     },
+    verified: {
+        type: Boolean,
+        default: false
+    },
     rating: [{
         rating_user: {
             type: Schema.Types.ObjectId,
@@ -88,8 +95,72 @@ const CompanySchema = new Schema({
             type: Date,
             default: Date.now
         }
+    }],
+    questionnaire: {
+        type: String,
+    },
+    phone: {
+        type: String,
+        required: true,
+        minlength: 9
+    },
+    twitter_account: {
+        type: String
+    },
+    linkedin_account: {
+        type: String
+    },
+    opinions: [{
+        author: {
+            type: Schema.Types.ObjectId,
+            ref: 'user',
+            required: true
+        },
+        date: {
+            type: Date,
+            default: Date.now
+        },
+        content: {
+            type: String,
+            minlength: 10,
+            required: true,
+        }
+    }],
+    suggestions: [{
+        author: {
+            type: Schema.Types.ObjectId,
+            ref: 'user',
+            required: true
+        },
+        date: {
+            type: Date,
+            default: Date.now
+        },
+        content: {
+            type: String,
+            minlength: 10,
+            required: true,
+        }
+    }],
+    claims: [{
+        author: {
+            type: Schema.Types.ObjectId,
+            ref: 'user',
+            required: true
+        },
+        date: {
+            type: Date,
+            default: Date.now
+        },
+        content: {
+            type: String,
+            minlength: 10,
+            required: true,
+        }
     }]
 });
+
+
 
 // Mejoramos lo que devolvemos de mongoDB (no necesitamos la contraseña) Más seguridad
 CompanySchema.methods.toJSON = function () {

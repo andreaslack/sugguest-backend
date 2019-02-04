@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 var _ = require('lodash');
 const jwt = require('jsonwebtoken');
+const { authenticate } = require('./config/authenticate');
 
 const app = express();
 
@@ -64,7 +65,7 @@ app.post('/register/user', (req, res) => {
 // Ruta registro para empresas
 app.post('/register/company', (req, res) => {
     
-    var body = _.pick(req.body, ['web','rating','nif','company_name','name_responsible','email', 'password']);
+    var body = _.pick(req.body, ['web','rating','nif','company_name','name_responsible','email', 'password','phone', 'verified', 'opinions', 'description']);
     var company = new Company(body);
 
     console.log(company);
@@ -82,6 +83,30 @@ app.post('/register/company', (req, res) => {
 
 });
 
+
+
+// Nos devuelve los datos del usuario que coincida con el token de la cabecera
+app.get('/user/profile', authenticate,(req, res) => {
+    
+    res.send(req.user);
+
+    /* Sin middleware de por medio..
+    var token = req.header('x-auth');
+
+    User.findByToken(token).then((user) => {
+        
+        if(!user) {
+            return Promise.reject();
+        }
+
+        res.send(user);
+
+    }).catch((e) => {
+        res.status(401).send();
+    });
+    */
+
+});
 
 
 // Página donde mostramos cards con las empresas que tenemos en la plataforma

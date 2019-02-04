@@ -45,6 +45,10 @@ const UserSchema = new Schema({
     }],
     image: {
         type: String
+    },
+    accept_terms: {
+        type: Boolean,
+        required: true
     }
 });
 
@@ -56,7 +60,7 @@ UserSchema.methods.toJSON = function () {
     var userObject = user.toObject();
 
     return _.pick(userObject, ['_id', 'email']); //no devolvemos la contraseña ni el token, son datos sensibles.
-}
+};
 
 
 // Método que genera el token para cada usuario y lo guarda en base de datos asignado al usuario
@@ -71,7 +75,27 @@ UserSchema.methods.generateAuthToken = function() {
     return user.save().then(()=> {
         return token;
     });
-}
+};
+
+UserSchema.statics.findByToken = function (token) {
+
+    var User = this;
+
+    var decoded;
+
+    try {
+        decoded = jwt.verify(token, 'abc123')
+    } catch (error) {
+        return Promise.reject();
+    }
+
+    return User.findOne({
+        '_id': decoded._id,
+        'tokens.token': token,
+        'tokens.access': 'auth'
+    })
+
+};
 
 
 // Exportamos el modelo para poder usarlo
