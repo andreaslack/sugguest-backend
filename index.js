@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const { authenticate } = require('./config/authenticate');
 const bcrypt = require('bcryptjs');
 
+
 const app = express();
 
 // Middlewares
@@ -132,6 +133,26 @@ app.get('/companies', (req, res) => {
 });
 
 
+
+
+// Nos devuelve la información pública de una empresa pasada por parámetro en la URL
+app.get('/:company_name', (req, res) => {
+    
+    var company = req.params.company_name;
+    console.log(company);
+   
+    Company.find({company_name: company}).then((company) => {
+        if(!company) {
+            res.status(400).send();
+        } 
+
+        res.send(company);
+
+    }).catch((e) => {
+        res.status(400).send();
+    })
+
+});
 
 
 
