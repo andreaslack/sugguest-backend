@@ -167,7 +167,7 @@ CompanySchema.methods.toJSON = function () {
     var company = this;
     var companyObject = company.toObject();
 
-    return _.pick(companyObject, ['_id', 'email']); 
+    return _.pick(companyObject, ['_id', 'email', 'verified', 'rating', 'company_name', 'phone', 'opinions', 'description', 'suggestions']); 
 }
 
 

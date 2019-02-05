@@ -86,31 +86,41 @@ app.post('/register/company', (req, res) => {
 
 
 
-// Nos devuelve los datos del usuario que coincida con el token de la cabecera
-app.get('/user/profile', authenticate,(req, res) => {
-    
+// Nos devuelve los datos del usuario que coincida con el token de la cabecera de la petición (PASA POR EL MIDDLEWARE)
+app.get('/user/profile', authenticate, (req, res) => {
     res.send(req.user);
+});
 
-    /* Sin middleware de por medio..
-    var token = req.header('x-auth');
 
-    User.findByToken(token).then((user) => {
-        
-        if(!user) {
-            return Promise.reject();
-        }
 
-        res.send(user);
+// Login para usuarios, comprueba por email si hay un usuario y luego con el compare la contraseña y se genera el token.
+app.post('/user/login', (req, res) => {
+    const body = _.pick(req.body, ['email', 'password']);
 
+    User.findByCredentials(body.email, body.password).then((user) => {
+        return user.generateAuthToken().then((token) => {
+            res.header('x-auth', token).send(user);
+        })
     }).catch((e) => {
-        res.status(401).send();
-    });
-    */
+        res.status(400).send();
+    })
 
 });
 
 
-// Página donde mostramos cards con las empresas que tenemos en la plataforma
+
+app.delete('/user/logout', authenticate,(req, res) => {
+    req.user.removeToken(req.token).then(() => {
+        res.status(200).send();
+    }, () => {
+        res.status(400).send();
+    });
+});
+
+
+
+
+// Nos devuelve los datos visibles de todas las empresas.
 app.get('/companies', (req, res) => {
     Company.find({}, (err, result) => {
         if (err) {
@@ -119,7 +129,7 @@ app.get('/companies', (req, res) => {
             res.status(200).send(result);
         }
     });
-})
+});
 
 
 
