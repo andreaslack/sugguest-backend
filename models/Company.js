@@ -140,7 +140,15 @@ const CompanySchema = new Schema({
             type: String,
             minlength: 10,
             required: true,
-        }
+        },
+        likes: [
+            {
+                user: {
+                    type: Schema.Types.ObjectId,
+                    ref: 'user'
+                }
+            }
+        ]
     }],
     claims: [{
         author: {

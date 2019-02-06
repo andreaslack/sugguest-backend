@@ -42,7 +42,7 @@ app.get('/prueba', (req, res) => {
 
 
 
-// Ruta registro para usuarios
+// ----- Ruta registro para usuarios ----- //
 app.post('/register/user', (req, res) => {
 
     var body = _.pick(req.body, ['name','email', 'password','accept_terms']);
@@ -64,7 +64,7 @@ app.post('/register/user', (req, res) => {
 
 
 
-// Ruta registro para empresas
+// ----- Ruta registro para empresas ----- //
 app.post('/register/company', (req, res) => {
     
     var body = _.pick(req.body, ['web','rating','nif','company_name','name_responsible','email', 'password','phone', 'verified', 'opinions', 'description']);
@@ -87,14 +87,14 @@ app.post('/register/company', (req, res) => {
 
 
 
-// Nos devuelve los datos del usuario que coincida con el token de la cabecera de la petición (PASA POR EL MIDDLEWARE)
+// ----- Nos devuelve los datos del usuario que coincida con el token de la cabecera de la petición (PASA POR EL MIDDLEWARE) ----- //
 app.get('/user/profile', authenticate, (req, res) => {
     res.send(req.user);
 });
 
 
 
-// Login para usuarios, comprueba por email si hay un usuario y luego con el compare la contraseña y se genera el token.
+// ----- Login para usuarios, comprueba por email si hay un usuario y luego con el compare la contraseña y se genera el token. ----- //
 app.post('/user/login', (req, res) => {
     const body = _.pick(req.body, ['email', 'password']);
 
@@ -109,7 +109,7 @@ app.post('/user/login', (req, res) => {
 });
 
 
-
+// ----- Elimina el token del usuario ----- //
 app.delete('/user/logout', authenticate,(req, res) => {
     req.user.removeToken(req.token).then(() => {
         res.status(200).send();
@@ -121,7 +121,7 @@ app.delete('/user/logout', authenticate,(req, res) => {
 
 
 
-// Nos devuelve los datos visibles de todas las empresas.
+// ----- Nos devuelve los datos visibles de todas las empresas. ----- //
 app.get('/companies', (req, res) => {
     Company.find({}, (err, result) => {
         if (err) {
@@ -135,7 +135,7 @@ app.get('/companies', (req, res) => {
 
 
 
-// Nos devuelve la información pública de una empresa pasada por parámetro en la URL
+// ----- Nos devuelve la información pública de una empresa pasada por parámetro en la URL ----- //
 app.get('/:company_name', (req, res) => {
     
     var company = req.params.company_name;
@@ -157,7 +157,12 @@ app.get('/:company_name', (req, res) => {
 
 
 
-// SERVIDOR Y PUERTO
+
+
+
+
+
+// ***** SERVIDOR Y PUERTO ***** //
 const port = process.env.PORT || 9000;
 
 app.listen(port, () => {
